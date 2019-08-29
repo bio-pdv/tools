@@ -25,6 +25,12 @@ type SequenceAnnotation struct {
 	// (2) Acts as a timestamp to differentiate the sequence annotations
 	//     with the same sequence id and position.
 	Generation string
+	// Application is the name of the application this
+	// annotation came from.
+	Application string
+	// AppVersion is the version of the application this
+	// annotation came from.
+	AppVersion string
 	// Mutation is a description, usually of how nucleotides
 	// are added, substituted, or deleted.
 	Mutation string
