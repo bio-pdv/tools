@@ -2,8 +2,24 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/lisa-phoenix-dev/pop-dyn-viewer-tools/gene/cmd/parse"
 	"github.com/spf13/cobra"
+	"log"
 	"os"
+)
+
+const (
+	fPathFlag   = "filepath"
+	shortFpFlag = "f"
+
+	typeFlag      = "type"
+	shortTypeFlag = "t"
+
+	appNameFlag = "app-name"
+	shortAnFlag = "a"
+
+	appVersFlag = "app-version"
+	shortAvFlag = "v"
 )
 
 func init() {
@@ -14,13 +30,13 @@ func init() {
 	rootCmd.AddCommand(deleteCmd)
 	rootCmd.AddCommand(searchCmd)
 
-	parseCmd.Flags().StringP("filename", "f", "", "Filename to parse.")
+	parseCmd.Flags().StringP(fPathFlag, shortFpFlag, "", "Filename to parse.")
 	// TODO List out all available options for these fields in the help
-	parseCmd.Flags().StringP("type", "t", "html", "File format type of the data.")
+	parseCmd.Flags().StringP(typeFlag, shortTypeFlag, "html", "File format type of the data.")
 	// If the application or version is not given, then an auto-detection should ensue.
 	// If the auto-detection fails, then we will need to error out.
-	parseCmd.Flags().StringP("application", "a", "", "Application that generated the data.")
-	parseCmd.Flags().StringP("version", "v", "", "Version of the application that generated the data.")
+	parseCmd.Flags().StringP(appNameFlag, shortAnFlag, "", "Application that generated the data.")
+	parseCmd.Flags().StringP(appVersFlag, shortAvFlag, "", "Version of the application that generated the data.")
 }
 
 func Execute() {
@@ -50,7 +66,14 @@ var parseCmd = &cobra.Command{
                     * TSV`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Parse Command")
-		// TODO Delegate to a separate parsing entity
+		filePath, err := cmd.Flags().GetString(fPathFlag)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// TODO Validate application name and version.
+		log.Printf("Parsing File: %s\n", filePath)
+		parse.MustParseSeqAnnotationDataFilePath(filePath, "html", "breseq", "0.27")
 	},
 }
 
