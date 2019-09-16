@@ -16,7 +16,6 @@ const (
 	errMalformedTableMsg         = "Parsing malformed table"
 	errMalformedRowMsg           = "Parsing malformed row"
 	errMalformedColMsg           = "Parsing malformed column"
-	errMalformedEntity           = "Parsing encountered a malform state. Expected a non-empty stack."
 	errUnexpectedTokenMsgFmt     = "Parsing an unexpected token. Token: '%v'"
 	errMismatchedTokenMsgFmt     = "Parsing a mismatched token. Expected: '%v', but got: '%v'"
 	errImpossibleCaseMsg         = "Parser encountered an impossible case"
@@ -170,8 +169,7 @@ func handleTextTagToken(ctx *parserContext) error {
 	//
 	// Otherwise, the data is skipped.
 	if ctx.st.Len() <= 0 {
-		log.Println("Malformed Entity Encountered")
-		return errors.New(errMalformedEntity)
+		return nil
 	}
 
 	token, tokenOk := ctx.st.Peek().(*html.Token)

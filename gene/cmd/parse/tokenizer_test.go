@@ -100,7 +100,7 @@ func TestHandleTextTagToken(t *testing.T) {
 	mTokenizer.AssertCalled(t, "Token")
 }
 
-func TestHandleTextTagTokenMalformedEntity(t *testing.T) {
+func TestHandleTextTagTokenSkip(t *testing.T) {
 	mockSt, mTokenizer := new(mockStack), new(mockTokenizer)
 	mockSt.On("Len").Return(0).Once()
 	testCtx := &parserContext{
@@ -108,7 +108,7 @@ func TestHandleTextTagTokenMalformedEntity(t *testing.T) {
 		tk: mTokenizer,
 	}
 
-	assert.NotNil(t, handleTextTagToken(testCtx))
+	assert.Nil(t, handleTextTagToken(testCtx))
 	mockSt.AssertCalled(t, "Len")
 }
 
