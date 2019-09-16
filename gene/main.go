@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/lisa-phoenix-dev/pop-dyn-viewer-tools/gene/cmd"
+	"github.com/bio-pdv/tools/gene/cmd"
 )
 
 func main() {

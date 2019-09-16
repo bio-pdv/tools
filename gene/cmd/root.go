@@ -2,7 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/lisa-phoenix-dev/pop-dyn-viewer-tools/gene/cmd/parse"
+	// TODO Add the following back after parser is PR'd
+	_ "github.com/bio-pdv/tools/gene/cmd/parse"
 	"github.com/spf13/cobra"
 	"log"
 	"os"
@@ -73,7 +74,8 @@ var parseCmd = &cobra.Command{
 
 		// TODO Validate application name and version.
 		log.Printf("Parsing File: %s\n", filePath)
-		parse.MustParseSeqAnnotationDataFilePath(filePath, "html", "breseq", "0.27")
+		// TODO Add the following back after parser is PR'd
+		//parse.MustParseSeqAnnotationDataFilePath(filePath, "html", "breseq", "0.27")
 	},
 }
 
