@@ -1,2 +1,2 @@
-# pop-dyn-viewer-tools
-Tools for the Pop Dyn Viewer Project
+# bio-pdv Tools
+Tools for the Population Dynamics Viewer
