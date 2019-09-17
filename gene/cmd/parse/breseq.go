@@ -3,6 +3,7 @@ package parse
 import (
 	"errors"
 	"fmt"
+	// TODO Change to protobuf model
 	"github.com/bio-pdv/tools/model"
 	"io"
 	"log"
@@ -15,12 +16,15 @@ type application string
 type appVersion string
 
 const (
-	htmlFileType          fileType    = "html"
-	breseq                application = "breseq"
-	breseqVers027Number   appVersion  = "0.27"
-	minExpectedTables                 = 2
-	minExpectedVersRows               = 2
-	minExpectedHeaderRows             = 2
+	htmlFileType            fileType    = "html"
+	breseq                  application = "breseq"
+	breseqVers027Number     appVersion  = "0.27"
+	nonBreakingSpaceUnicode             = "\u00A0"
+	newlineChar                         = "\n"
+	emptyChar                           = " "
+	minExpectedTables                   = 2
+	minExpectedVersCols                 = 2
+	minExpectedHeaderRows               = 2
 	// TODO Support breseq gd format.
 
 	errInvalidBreseq027HtmlFile  = "breseq 0.27.* HTML file format is the only supported file type right now."
@@ -137,14 +141,14 @@ func isBreseq027VersTable(tTable table) bool {
 	}
 
 	versRow := tTable[0]
-	if len(versRow) < minExpectedVersRows {
+	if len(versRow) < minExpectedVersCols {
 		log.Println(errInvalidVersTableMsgFmt, errNotEnoughContent)
 		return false
 	}
 
-	versCol := strings.Replace(versRow[1], "\u00A0", "", -1)
-	versCol = strings.Replace(versCol, "\n", "", -1)
-	versCol = strings.Replace(versCol, " ", "", -1)
+	versCol := strings.Replace(versRow[1], nonBreakingSpaceUnicode, "", -1)
+	versCol = strings.Replace(versCol, newlineChar, "", -1)
+	versCol = strings.Replace(versCol, emptyChar, "", -1)
 
 	log.Printf("Validating version: '%s' with prefix: '%s'\n", versCol, breseqVers027Prefix)
 	if !strings.HasPrefix(versCol, breseqVers027Prefix) {
@@ -169,7 +173,7 @@ func isBreseq027DataTable(tTable table) bool {
 		return false
 	}
 
-	// Throw away the first row, which just has the string, "Predicted mutations"
+	// Throw away the first row with the string, "Predicted mutations"
 	tHeader := tTable[1]
 	if len(tHeader) <= 0 || len(tHeader) != len(breseq027HtmlDataHeaders) {
 		log.Printf(errMismatchedLenDTableMsgFmt, len(breseq027HtmlDataHeaders), len(tHeader))
@@ -198,7 +202,7 @@ func parseBreseq027HtmlFile(reader io.Reader) ([][]model.SequenceAnnotation, err
 		return nil, fmt.Errorf(errInvalidBreseq027HtmlFile)
 	}
 
-	// Skip the first table. It should be the versions table.
+	// Skip the first table, which is the versions table.
 	for i := 1; i < len(tables); i++ {
 		table := tables[i]
 		if len(table) > 0 {
@@ -218,6 +222,16 @@ func changeBreseq027TableToSeqAnnotation(dataTable table) []model.SequenceAnnota
 
 	results := []model.SequenceAnnotation{}
 	// Skip the throw away and header rows.
+	//  * First row is just the string, "Predicted mutations".
+	//  * Second row is the header with:
+	//     * evidence
+	//     * seq id
+	//     * position
+	//     * mutation
+	//     * freq
+	//     * annotation
+	//     * gene
+	//     * description
 	for i := 2; i < len(dataTable); i++ {
 		dataRow := dataTable[i]
 		sa := model.SequenceAnnotation{

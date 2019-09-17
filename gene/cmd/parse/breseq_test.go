@@ -11,6 +11,7 @@ import (
 )
 
 const (
+	blankCol           = "blank col"
 	testSuffix         = "test_data_"
 	testSuffix0        = testSuffix + "0"
 	testSuffix1        = testSuffix + "1"
@@ -110,10 +111,6 @@ tr {background-color: rgb(255,255,255);}
 </html>`
 )
 
-const (
-	blankCol = "blank col"
-)
-
 var (
 	dataRow = row{
 		"evid",
@@ -153,16 +150,6 @@ func TestParseBreseq027HtmlFile(t *testing.T) {
 }
 
 func TestChangeBreseq027TableToSeqAnnotation(t *testing.T) {
-	dataRow := row{
-		"evid",
-		"AB_012345",
-		"12,456",
-		"+G",
-		"100%",
-		"abcdefg&nbsp;(&#1234;567/+89)",
-		"ABC0123</i>&nbsp;&larr;&nbsp;/&nbsp;&larr;&nbsp;DV4567",
-		"abcdefghijklmnopqrstuvwxyz",
-	}
 	testTable := table{
 		row{"throw away header"},
 		row(breseq027HtmlDataHeaders),
@@ -172,7 +159,6 @@ func TestChangeBreseq027TableToSeqAnnotation(t *testing.T) {
 	assert.Equal(t, 1, len(testSaTable))
 
 	testSa := testSaTable[0]
-	assert.True(t, len(testSaTable) > 0)
 	assert.Equal(t, dataRow[1], testSa.SequenceId)
 	assert.Equal(t, dataRow[2], testSa.Position)
 	assert.Equal(t, dataRow[3], testSa.Mutation)
