@@ -61,7 +61,7 @@ var (
 
 // MustParseSeqAnnotationDataFilePath is the same as the ParseSeqAnnotationDataFilePath except it
 // panics on the error.
-func MustParseSeqAnnotationDataFilePath(filePath string, fileType string, appName, version string) [][]model.SequenceAnnotation {
+func MustParseSeqAnnotationDataFilePath(filePath string, fileType string, appName string, version string) [][]model.SequenceAnnotation {
 	result, err := ParseSeqAnnotationDataFilePath(filePath, fileType, appName, version)
 	if err != nil {
 		log.Fatal(err)
