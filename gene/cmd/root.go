@@ -120,7 +120,7 @@ The only supported input file format is HTML.`,
 		}
 
 		delim := csvDelimiter
-		outputType, err := cmd.Flags().GetString(outputTypeFlag)
+		outputType, _ := cmd.Flags().GetString(outputTypeFlag)
 		if outputType == tsvOutputType {
 			delim = tsvDelimiter
 		}
